@@ -1,0 +1,43 @@
+---
+import '@fontsource/twinkle-star';
+
+import Nav from "../components/Nav.astro";
+
+const {
+    title,
+    keywords,
+    description,
+} = Astro.props;
+---
+
+<!doctype html>
+<html lang="ar">
+<head>
+    <meta charset="UTF-8"/>
+    <meta name="viewport" content="width=device-width"/>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
+    <meta name="generator" content={Astro.generator}/>
+    <meta name="keywords" content={keywords}/>
+    <meta name="description" content={description}/>
+    <meta property="og:title" content={title}/>
+    <meta property="og:description" content={description}/>
+    <meta property="og:type" content="website"/>
+    <meta property="og:url" content={Astro.url}/>
+    <title>{title}</title>
+</head>
+<body class="bg-white dark:bg-neutral-900">
+<Nav/>
+<main class="container mx-auto my-16 flex flex-col items-center text-gray-800 dark:text-gray-200">
+    <slot/>
+</main>
+
+</body>
+</html>
+
+<style is:global>
+    html {
+        font-family: 'IBM Plex Sans Arabic', sans-serif;
+        font-size: 20px;
+        direction: rtl;
+    }
+</style>

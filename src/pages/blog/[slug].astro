@@ -1,0 +1,116 @@
+---
+import client from "../../../tina/__generated__/client";
+import Layout from "../../layouts/Layout.astro";
+import {TinaMarkdown} from 'tinacms/dist/rich-text';
+
+
+export async function getStaticPaths() {
+    const articlesResponse = await client.queries.articleConnection();
+    return articlesResponse.data.articleConnection.edges.map((article) => {
+        return {
+            params: {
+                slug: article.node._sys.filename
+            },
+            props: {
+                article: article.node
+            }
+        }
+    });
+}
+
+const {
+    article: {
+        title,
+        description,
+        body,
+        date,
+        tags
+    }
+} = Astro.props;
+
+const url = Astro.url;
+
+const {children} = body;
+const toc = children.filter((child) => child.type.includes('h')).map((child) => {
+    return {
+        level: child.type.replace('h', ''),
+        text: child.children[0].text,
+    }
+});
+---
+
+<Layout title={title} description={description} keywords={tags.join(', ')}>
+    <article
+            class="w-full xl:w-1/2 mx-auto p-4 border shadow rounded-lg my-8 dark:text-gray-200 dark:border-neutral-700">
+        <header class="mb-4 border-b border-neutral-600 dark:border-gray-500 pb-4 space-y-3">
+            <h1 class="text-2xl font-bold" aria-label="عنوان المقال">
+                {title}</h1>
+            <div class="text-sm text-gray-600 dark:text-gray-400 flex items-center gap-2">
+                <p
+                        aria-label="نشر في"
+                >نشر في:</p>
+                <time datetime={date} class="flex items-center gap-1" aria-label="تاريخ النشر">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd"
+                              d="M10 2a8 8 0 100 16 8 8 0 000-16zm0 1a7 7 0 110 14 7 7 0 010-14zm0 3a1 1 0 011 1v4h2a1 1 0 110 2h-3a1 1 0 01-1-1V6a1 1 0 011-1z"
+                              clip-rule="evenodd"/>
+                    </svg>
+                    {new Date(date).toLocaleDateString('ar', {
+                        year: 'numeric',
+                        month: 'long',
+                        day: 'numeric',
+                        weekday: 'long'
+                    })}
+                </time>
+            </div>
+            <div class="flex space-x-2 items-center gap-2">
+                <span class="text-sm text-gray-600 dark:text-gray-400" aria-label="الوسوم">
+                    الوسوم:
+                </span>
+                {tags.map((tag) => {
+                    return <a
+                            href={`/tags/${tag}`}
+                            aria-label={`الوسم: ${tag}`}
+                            class="border-b border-neutral-500 dark:border-neutral-400 hover:border-neutral-800 dark:hover:border-neutral-500 transition-colors">
+                        {tag}
+                    </a>
+                })}
+            </div>
+        </header>
+        <nav class="flex flex-col w-fit space-y-2 mb-8 border border-neutral-600 dark:border-gray-500 p-4 rounded-lg">
+            <h2 class="text-lg font-bold" aria-label="فهرس المقال">
+                محتويات المقال:
+            </h2>
+            <ul class="flex flex-col space-y-2 list-decimal list-inside ps-4">
+                {toc.map((item) => {
+                    return <li class={`pl-${item.level} text-gray-600 dark:text-gray-300`}>
+                        {item.text}
+                    </li>
+                })}
+            </ul>
+        </nav>
+        <blockquote class="text-lg border-s-4 border-neutral-600 dark:border-gray-400 ps-4 my-8 italic">
+            {description}
+        </blockquote>
+        <div class="prose dark:prose-invert">
+            <TinaMarkdown content={body}/>
+        </div>
+        <div class="flex justify-center my-8 space-x-2">
+            <a href=`https://x.com/intent/tweet?text=${title}&url=${url}` target="_blank"
+               aria-label="شارك على تويتر"
+               class="bg-blue-500 text-white px-4 py-2 rounded-lg mx-2 hover:bg-blue-600 transition-colors">
+                شارك على تويتر
+            </a>
+            <a href=`https://www.facebook.com/sharer/sharer.php?u=${url}` target="_blank"
+               aria-label="شارك على فيسبوك"
+               class="bg-blue-700 text-white px-4 py-2 rounded-lg mx-2 hover:bg-blue-800 transition-colors">
+                شارك على فيسبوك
+            </a>
+        </div>
+    </article>
+    <footer class="text-center text-sm text-gray-500 dark:text-gray-400">
+        <p>
+            هذا المقال مفتوح المصدر ويمكنك المساهمة في تحسينه عبر <a href="#" class="border-b border-neutral-500 dark:border-neutral-400 hover:border-neutral-800 dark:hover:border-neutral-500 transition-colors">المصدر</a>
+        </p>
+    </footer>
+</Layout>
