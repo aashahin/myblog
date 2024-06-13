@@ -21,17 +21,15 @@ export default config({
                     options: {
                         image: {
                             directory: 'src/assets/images/posts',
-                            publicPath: '@assets/images/posts/'
-
-                        }
-                    }
+                            publicPath: '../../assets/images/posts/',
+                        },
+                    },
                 }),
                 date: fields.date({label: 'Date'}),
                 tags: fields.array(
                     fields.relationship({
                         label: 'Tags',
                         collection: 'tags',
-                        description: 'Tags for this post',
                     })
                 )
             },
@@ -40,7 +38,6 @@ export default config({
             label: 'Tags',
             slugField: 'name',
             path: 'src/content/tags/*',
-            format: {contentField: 'content'},
             schema: {
                 name: fields.slug({name: {label: 'Name'}}),
             },
