@@ -1,0 +1,35 @@
+---
+import ThemeIcon from "./ThemeIcon.astro"
+---
+
+<nav class="w-fit mx-auto sticky border top-10 z-50 bg-white shadow-md py-3 px-5 rounded-lg flex gap-4 justify-between items-center dark:bg-neutral-900 dark:border-neutral-800 dark:shadow-neutral-950">
+    <ul class="flex gap-3">
+        <li>
+            <a
+                    href="/"
+                    class="text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300"
+            >
+                الرئيسية
+            </a>
+        </li>
+
+        <li>
+            <a
+                    href="/blog"
+                    class="text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300"
+            >
+                المدونة
+            </a>
+        </li>
+        <li>
+            <a
+                    href="https://github.com/aashahin"
+                    target="_blank"
+                    class="text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300"
+            >
+                جيثب
+            </a>
+        </li>
+    </ul>
+    <ThemeIcon/>
+</nav>

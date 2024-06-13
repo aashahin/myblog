@@ -1,0 +1,60 @@
+---
+import Layout from "../../layouts/Layout.astro";
+import {getCollection} from 'astro:content'
+export const prerender = true;
+
+export async function getStaticPaths() {
+    const posts = await getCollection('posts');
+    const tags = posts.map(({data: {tags}}) => tags);
+    const uniqueTags = [...new Set(tags.flat())];
+
+    return uniqueTags.map((tag) => {
+        return {
+            params: {
+                tag: tag
+            }
+        }
+    });
+}
+
+const {tag} = Astro.params;
+const posts = await getCollection('posts', (post) => post.data.tags.includes(tag));
+---
+
+<Layout title=`مقالات عن ${tag}`
+        description="مقالات تقنية وبرمجية"
+        keywords="مدونة, تقنية, برمجة, نود جي اس, جافا سكريبت, جيتسبي, جيت">
+    <main class="container px-4 w-fit md:w-1/2">
+        <h1 class="text-3xl font-bold mt-8 mb-4 text-gray-900 dark:text-gray-100"
+            aria-label="title">
+            مقالات عن {tag}
+        </h1>
+        <section class="flex flex-col w-fit ms-8">
+            {
+                posts.map(({data: {title, date, tags}, slug}) => (
+                        <article
+                                class="flex flex-col my-4"
+                        >
+                            <div class="flex flex-wrap">
+                                {
+                                    tags.map((tag: string) => (
+                                            <a href=`/tags/${tag}`
+                                               aria-label="tag"
+                                               class="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">#{tag}</a>
+                                    ))
+                                }
+                            </div>
+
+                            <h2 class="text-lg font-semibold text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
+                                <a href=`/blog/${slug}` data-astro-prefetch>{title}</a>
+                            </h2>
+
+                            <p class="text-sm text-gray-500">تاريخ النشر: {new Date(date).toLocaleDateString('ar')}</p>
+                        </article>
+
+                ))
+            }
+        </section>
+    </main>
+</Layout>
+
