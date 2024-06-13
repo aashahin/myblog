@@ -2,10 +2,10 @@ import {config, fields, collection} from '@keystatic/core';
 
 export default config({
     storage: {
-        kind: 'github',
-        repo: 'aashahin/myblog',
-        branchPrefix: 'main',
-        pathPrefix: 'content',
+        kind: 'cloud',
+    },
+    cloud: {
+        project: 'fonoq/myblog'
     },
     collections: {
         posts: collection({
