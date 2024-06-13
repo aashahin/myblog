@@ -38,8 +38,8 @@ const url = Astro.url;
 const toc = body.split('\n').filter((line) => {
     return line.startsWith('#');
 }).map((line) => {
+    const text = line.replace(/\*\*/g, '').replace(/#/g, '').trim();
     const level = line.split('#').length - 1;
-    const text = line.replace(/#/g, '').trim();
     return {
         level,
         text
