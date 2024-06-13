@@ -1,5 +1,0 @@
----
-name: Arabic
-code: ar
----
-

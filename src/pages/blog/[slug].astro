@@ -1,40 +1,48 @@
 ---
-import client from "../../../tina/__generated__/client";
 import Layout from "../../layouts/Layout.astro";
-import {TinaMarkdown} from 'tinacms/dist/rich-text';
-
+import {getCollection, getEntry} from 'astro:content'
+export const prerender = true;
 
 export async function getStaticPaths() {
-    const articlesResponse = await client.queries.articleConnection();
-    return articlesResponse.data.articleConnection.edges.map((article) => {
+    const posts = await getCollection('posts');
+    return posts.map((post) => {
         return {
             params: {
-                slug: article.node._sys.filename
+                slug: post.slug
             },
             props: {
-                article: article.node
+                post
             }
         }
     });
 }
 
 const {
-    article: {
-        title,
-        description,
+    post: {
+        data: {
+            title,
+            date,
+            tags,
+            description,
+        },
         body,
-        date,
-        tags
+        slug
     }
 } = Astro.props;
 
+const post = await getEntry('posts', slug as string)
+const {Content} = await post.render()
+
 const url = Astro.url;
 
-const {children} = body;
-const toc = children.filter((child) => child.type.includes('h')).map((child) => {
+const toc = body.split('\n').filter((line) => {
+    return line.startsWith('#');
+}).map((line) => {
+    const level = line.split('#').length - 1;
+    const text = line.replace(/#/g, '').trim();
     return {
-        level: child.type.replace('h', ''),
-        text: child.children[0].text,
+        level,
+        text
     }
 });
 ---
@@ -67,7 +75,7 @@ const toc = children.filter((child) => child.type.includes('h')).map((child) => 
                 <span class="text-sm text-gray-600 dark:text-gray-400" aria-label="الوسوم">
                     الوسوم:
                 </span>
-                {tags.map((tag) => {
+                {tags.map((tag: string) => {
                     return <a
                             href={`/tags/${tag}`}
                             aria-label={`الوسم: ${tag}`}
@@ -82,18 +90,18 @@ const toc = children.filter((child) => child.type.includes('h')).map((child) => 
                 محتويات المقال:
             </h2>
             <ul class="flex flex-col space-y-2 list-decimal list-inside ps-4">
-                {toc.map((item) => {
-                    return <li class={`pl-${item.level} text-gray-600 dark:text-gray-300`}>
-                        {item.text}
-                    </li>
-                })}
+                {toc.map((item) => (
+                        <li class={`pl-${item.level} text-gray-600 dark:text-gray-300`}>
+                            {item.text}
+                        </li>
+                ))}
             </ul>
         </nav>
         <blockquote class="text-lg border-s-4 border-neutral-600 dark:border-gray-400 ps-4 my-8 italic">
             {description}
         </blockquote>
         <div class="prose dark:prose-invert">
-            <TinaMarkdown content={body}/>
+            <Content/>
         </div>
         <div class="flex justify-center my-8 space-x-2">
             <a href=`https://x.com/intent/tweet?text=${title}&url=${url}` target="_blank"
@@ -110,7 +118,8 @@ const toc = children.filter((child) => child.type.includes('h')).map((child) => 
     </article>
     <footer class="text-center text-sm text-gray-500 dark:text-gray-400">
         <p>
-            هذا المقال مفتوح المصدر ويمكنك المساهمة في تحسينه عبر <a href="#" class="border-b border-neutral-500 dark:border-neutral-400 hover:border-neutral-800 dark:hover:border-neutral-500 transition-colors">المصدر</a>
+            هذا المقال مفتوح المصدر ويمكنك المساهمة في تحسينه عبر <a href="#"
+                                                                     class="border-b border-neutral-500 dark:border-neutral-400 hover:border-neutral-800 dark:hover:border-neutral-500 transition-colors">المصدر</a>
         </p>
     </footer>
 </Layout>

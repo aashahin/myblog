@@ -1,10 +1,11 @@
 ---
-import client from "../../../tina/__generated__/client";
 import Layout from "../../layouts/Layout.astro";
+import {getCollection} from 'astro:content'
+export const prerender = true;
 
 export async function getStaticPaths() {
-    const articles = await client.queries.articleConnection();
-    const tags = articles.data.articleConnection.edges.map(({node}) => node.tags);
+    const posts = await getCollection('posts');
+    const tags = posts.map(({data: {tags}}) => tags);
     const uniqueTags = [...new Set(tags.flat())];
 
     return uniqueTags.map((tag) => {
@@ -17,8 +18,7 @@ export async function getStaticPaths() {
 }
 
 const {tag} = Astro.params;
-const articlesRes = await client.queries.articleConnection({filter: {tags: {eq: tag}}});
-const articles = articlesRes.data.articleConnection.edges;
+const posts = await getCollection('posts', (post) => post.data.tags.includes(tag));
 ---
 
 <Layout title=`مقالات عن ${tag}`
@@ -31,13 +31,13 @@ const articles = articlesRes.data.articleConnection.edges;
         </h1>
         <section class="flex flex-col w-fit ms-8">
             {
-                articles.map(({node: {title, date, tags, _sys: {filename}}}) => (
+                posts.map(({data: {title, date, tags}, slug}) => (
                         <article
                                 class="flex flex-col my-4"
                         >
                             <div class="flex flex-wrap">
                                 {
-                                    tags.map(tag => (
+                                    tags.map((tag: string) => (
                                             <a href=`/tags/${tag}`
                                                aria-label="tag"
                                                class="text-sm text-gray-500 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">#{tag}</a>
@@ -46,7 +46,7 @@ const articles = articlesRes.data.articleConnection.edges;
                             </div>
 
                             <h2 class="text-lg font-semibold text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300">
-                                <a href=`/blog/${filename}` data-astro-prefetch>{title}</a>
+                                <a href=`/blog/${slug}` data-astro-prefetch>{title}</a>
                             </h2>
 
                             <p class="text-sm text-gray-500">تاريخ النشر: {new Date(date).toLocaleDateString('ar')}</p>

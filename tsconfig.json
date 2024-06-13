@@ -1,7 +1,11 @@
 {
   "extends": "astro/tsconfigs/base",
   "compilerOptions": {
-    "strictNullChecks": true,
-    "allowJs": true
+    "strictNullChecks": false,
+    "allowJs": true,
+    "noImplicitAny": false,
+    "paths": {
+      "@assets/*": ["./src/assets/*"],
+    }
   }
 }
