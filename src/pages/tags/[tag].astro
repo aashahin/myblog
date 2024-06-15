@@ -32,7 +32,7 @@ const posts = await getCollection('posts', (post) => post.data.tags.includes(tag
         <section class="flex flex-col w-fit ms-8">
             {
                 posts
-                    .sort((a, b) => new Date(b.data.date) - new Date(a.data.date))
+                    .sort((a: {data: {date: string}}, b: {data: {date: string}}) => new Date(b.data.date) - new Date(a.data.date))
                     .map(({data: {title, date, tags}, slug}) => (
                             <article
                                     class="flex flex-col my-4"
