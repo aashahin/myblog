@@ -14,7 +14,7 @@ const posts = await getCollection('posts')
         <section class="flex flex-col w-fit ms-8">
             {
                 posts
-                    .sort((a: {data: {date: string}}, b: {data: {date: string}}) => new Date(b.data.date) - new Date(a.data.date))
+                    .sort((a: any, b: any) => new Date(b.data.date) - new Date(a.data.date))
                     .map(({data: {title, tags, date}, slug}) => (
                             <article
                                     class="flex flex-col my-4"
