@@ -1,7 +1,6 @@
 ---
 import Layout from "../../layouts/Layout.astro";
 import {getCollection, getEntry} from 'astro:content'
-export const prerender = true;
 
 export async function getStaticPaths() {
     const posts = await getCollection('posts');
@@ -24,6 +23,7 @@ const {
             date,
             tags,
             description,
+            keywords
         },
         body,
         slug
@@ -47,7 +47,7 @@ const toc = body.split('\n').filter((line) => {
 });
 ---
 
-<Layout title={title} description={description} keywords={tags.join(', ')}>
+<Layout title={title} description={description} keywords={(keywords && keywords.join(', ')) || tags.join(', ') || slug.replace(/-/g, ', ')}>
     <article
             class="w-full xl:w-1/2 mx-auto p-4 border shadow rounded-lg my-8 dark:text-gray-200 dark:border-neutral-700">
         <header class="mb-4 border-b border-neutral-600 dark:border-gray-500 pb-4 space-y-3">

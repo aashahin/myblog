@@ -31,7 +31,8 @@ export default config({
                         label: 'Tags',
                         collection: 'tags',
                     })
-                )
+                ),
+                keywords: fields.array(fields.text({label: 'Keywords'})),
             },
         }),
         tags: collection({
