@@ -1,35 +1,72 @@
 ---
-import ThemeIcon from "./ThemeIcon.astro"
+import ThemeIcon from "./ThemeIcon.astro";
+
+const navItems = [
+  { name: 'الرئيسية', href: '/' },
+  { name: 'المدونة', href: '/blog' },
+  { name: 'جيثب', href: 'https://github.com/aashahin', external: true },
+];
 ---
 
-<nav class="w-fit mx-auto sticky border top-10 z-50 bg-white shadow-md py-3 px-5 rounded-lg flex gap-4 justify-between items-center dark:bg-neutral-900 dark:border-neutral-800 dark:shadow-neutral-950">
-    <ul class="flex gap-3">
-        <li>
-            <a
-                    href="/"
-                    class="text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300"
-            >
-                الرئيسية
-            </a>
-        </li>
-
-        <li>
-            <a
-                    href="/blog"
-                    class="text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300"
-            >
-                المدونة
-            </a>
-        </li>
-        <li>
-            <a
-                    href="https://github.com/aashahin"
-                    target="_blank"
-                    class="text-gray-900 hover:text-gray-700 dark:text-gray-100 dark:hover:text-gray-300"
-            >
-                جيثب
-            </a>
-        </li>
-    </ul>
-    <ThemeIcon/>
+<nav class="fixed w-full top-4 left-1/2 transform -translate-x-1/2 z-50 bg-neutral-50/90 dark:bg-neutral-900/90 backdrop-blur border border-neutral-200 dark:border-neutral-800 rounded-2xl shadow max-w-2xl mx-auto transition-all duration-300 ease-in-out">
+  <div class="px-4 sm:px-6 lg:px-8">
+    <div class="flex justify-between items-center h-16">
+      <a href="/" class="text-xl font-extrabold text-neutral-800 dark:text-neutral-200 hover:text-neutral-600 dark:hover:text-neutral-400 transition-colors duration-200">
+    شَاهين
+      </a>
+      <div class="hidden md:flex md:items-center md:gap-2">
+        {navItems.map((item) => (
+          <a
+            href={item.href}
+            target={item.external ? "_blank" : undefined}
+            rel={item.external ? "noopener noreferrer" : undefined}
+            class="text-lg font-medium text-neutral-600 dark:text-neutral-300 hover:text-neutral-800 dark:hover:text-neutral-100 transition-colors duration-200 px-3 py-2 rounded-xl hover:bg-neutral-200 dark:hover:bg-neutral-800"
+          >
+            {item.name}
+          </a>
+        ))}
+      </div>
+      <div class="flex items-center gap-2">
+        <ThemeIcon />
+        <button
+          type="button"
+          class="md:hidden text-neutral-500 hover:text-neutral-700 dark:text-neutral-400 dark:hover:text-neutral-200 p-2 rounded-xl hover:bg-neutral-200 dark:hover:bg-neutral-800 focus:outline-none focus:ring-2 focus:ring-inset focus:ring-neutral-500 dark:focus:ring-neutral-400 transition-colors duration-200"
+          aria-controls="mobile-menu"
+          aria-expanded="false"
+        >
+          <span class="sr-only">افتح القائمة الرئيسية</span>
+          <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+  <div class="md:hidden hidden transition-all duration-300 ease-in-out" id="mobile-menu">
+    <div class="px-2 pt-2 pb-3 space-y-1">
+      {navItems.map((item) => (
+        <a
+          href={item.href}
+          target={item.external ? "_blank" : undefined}
+          rel={item.external ? "noopener noreferrer" : undefined}
+          class="block text-base font-medium text-neutral-600 dark:text-neutral-300 hover:text-neutral-800 dark:hover:text-neutral-100 hover:bg-neutral-200 dark:hover:bg-neutral-800 px-3 py-2 rounded-xl transition-colors duration-200"
+        >
+          {item.name}
+        </a>
+      ))}
+    </div>
+  </div>
 </nav>
+
+<script>
+  const mobileMenuButton = document.querySelector('button[aria-controls="mobile-menu"]');
+  const mobileMenu = document.getElementById('mobile-menu');
+
+  if (mobileMenuButton && mobileMenu) {
+    mobileMenuButton.addEventListener('click', () => {
+      const expanded = mobileMenuButton.getAttribute('aria-expanded') === 'true' || false;
+      mobileMenuButton.setAttribute('aria-expanded', String(!expanded));
+      mobileMenu.classList.toggle('hidden');
+    });
+  }
+</script>

@@ -1,45 +1,86 @@
 ---
 import Nav from "../components/Nav.astro";
+import { SEO } from "astro-seo";
 
-const {
-    title,
-    keywords,
-    description,
-} = Astro.props;
+interface Props {
+  title: string;
+  keywords: string;
+  description: string;
+}
+
+const { title, keywords, description } = Astro.props;
 ---
 
 <!doctype html>
-<html lang="ar">
-<head>
-    <meta charset="UTF-8"/>
-    <meta name="viewport" content="width=device-width"/>
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
-    <meta name="generator" content={Astro.generator}/>
-    <meta name="keywords" content={keywords}/>
-    <meta name="description" content={description}/>
-    <meta property="og:title" content={title}/>
-    <meta property="og:description" content={description}/>
-    <meta property="og:type" content="website"/>
-    <meta property="og:url" content={Astro.url}/>
-    <title>{title}</title>
-    <link rel="sitemap" href="/sitemap-index.xml" />
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap" rel="stylesheet">
-</head>
-<body class="bg-white dark:bg-neutral-900">
-<Nav/>
-<main class="container mx-auto my-16 flex flex-col items-center text-gray-800 dark:text-gray-200">
-    <slot/>
-</main>
-
-</body>
+<html lang="ar" dir="rtl">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <meta name="generator" content={Astro.generator} />
+    <SEO
+      title={title}
+      description={description}
+      openGraph={{
+        basic: {
+          title: title,
+          type: "website",
+          image: "/favicon.svg",
+        },
+        optional: {
+          description: description,
+        },
+      }}
+      extend={{
+        meta: [
+          { name: "keywords", content: keywords }
+        ],
+        link: [
+          { rel: "sitemap", href: "/sitemap-index.xml" }
+        ],
+      }}
+    />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <script is:inline>
+      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark')
+      } else {
+        document.documentElement.classList.remove('dark')
+      }
+    </script>
+  </head>
+  <body class="bg-white dark:bg-neutral-900 transition-colors duration-300">
+    <Nav />
+    <main class="container mx-auto my-16 px-4 sm:px-6 lg:px-8 flex flex-col items-center text-gray-800 dark:text-gray-200">
+      <slot />
+    </main>
+  </body>
 </html>
 
 <style is:global>
+  @tailwind base;
+  @tailwind components;
+  @tailwind utilities;
+
+  html {
+    font-family: 'Almarai', sans-serif;
+    font-size: 18px;
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply antialiased;
+    overflow-x: hidden;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
     html {
-        font-family: 'Almarai', sans-serif;
-        font-size: 20px;
-        direction: rtl;
+      scroll-behavior: auto;
     }
+  }
 </style>
