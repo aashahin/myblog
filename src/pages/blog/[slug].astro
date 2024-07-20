@@ -63,7 +63,7 @@ const formatDate = (date: string) => {
            </div>
            <div class="flex items-center">
              <Icon name="mdi:clock" class="w-4 h-4 md:w-5 md:h-5 me-2" />
-             <span class="text-sm md:text-base">{Math.ceil(body.split(' ').length / 200)} دقيقة للقراءة</span>
+             <span class="text-sm md:text-base">{Math.ceil(body.split(' ').length / 150)} دقيقة للقراءة</span>
            </div>
          </div>
          <div class="flex flex-wrap gap-2">
@@ -92,7 +92,7 @@ const formatDate = (date: string) => {
          {description}
        </blockquote>
 
-       <div class="prose dark:prose-invert max-w-none text-base md:text-lg">
+       <div class="prose dark:prose-invert max-w-none text-base md:text-lg markdown-content">
          <Content />
        </div>
 
@@ -124,3 +124,10 @@ const formatDate = (date: string) => {
     </div>
   </main>
 </Layout>
+
+<style is:global>
+.markdown-content pre {
+    direction: ltr;
+    text-align: left;
+  }
+  </style>

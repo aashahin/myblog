@@ -5,7 +5,6 @@ import markdoc from "@astrojs/markdoc";
 import keystatic from "@keystatic/astro";
 import vercel from "@astrojs/vercel/serverless";
 import icon from "astro-icon";
-
 import sitemap from "@astrojs/sitemap";
 
 // https://astro.build/config
@@ -14,7 +13,9 @@ export default defineConfig({
   integrations: [
     tailwind(),
     react(),
-    markdoc(),
+    markdoc({
+      typographer: true,
+    }),
     keystatic(),
     sitemap(),
     icon({
