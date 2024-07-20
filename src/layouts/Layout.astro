@@ -2,13 +2,16 @@
 import { ViewTransitions } from 'astro:transitions';
 import { SEO } from "astro-seo";
 import Nav from "../components/Nav.astro";
+
 interface Props {
   title: string;
   keywords: string;
   description: string;
 }
+
 const { title, keywords, description } = Astro.props;
 ---
+
 <!doctype html>
 <html lang="ar" dir="rtl">
   <head>
@@ -43,9 +46,12 @@ const { title, keywords, description } = Astro.props;
     <link
       href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap"
       rel="stylesheet"
+      media="print"
+      onload="this.media='all'"
     />
     <ViewTransitions />
     <script is:inline>
+      // Theme application logic (unchanged)
       function applyTheme() {
         const theme = (() => {
           if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
@@ -81,19 +87,27 @@ const { title, keywords, description } = Astro.props;
     </main>
   </body>
 </html>
+
 <style is:global>
   @tailwind base;
   @tailwind components;
   @tailwind utilities;
+
+  :root {
+    --font-almarai: 'Almarai', sans-serif;
+  }
+
   html {
-    font-family: 'Almarai', sans-serif;
+    font-family: var(--font-almarai);
     font-size: 18px;
     scroll-behavior: smooth;
   }
+
   body {
     @apply antialiased;
     overflow-x: hidden;
   }
+
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;

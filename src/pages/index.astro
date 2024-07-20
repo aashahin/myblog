@@ -7,8 +7,6 @@ const title = "عبدالرحمن شاهين";
 const description = "مهندس برمجيات متخصص في تطوير الويب والتطبيقات منذ 2018. أشارك المعرفة لتطوير مجتمع البرمجة العربي.";
 const keywords = "عبدالرحمن شاهين, مهندس برمجيات, تطوير الويب, تطوير التطبيقات, البرمجة العربية, مقالات, مشاريع";
 
-
-
 // Fetch recent blog posts
 const allPosts = await getCollection('posts');
 const recentPosts = allPosts
@@ -29,31 +27,33 @@ const recentPosts = allPosts
         <p class="text-xl leading-relaxed max-w-3xl mx-auto mb-10 text-start">
           أعمل في مجال تطوير الويب والتطبيقات منذ عام 2018. شغفي هو تحسين أداء البرمجيات ومشاركة المعرفة لتطوير مجتمع البرمجة العربي.
         </p>
-
       </header>
 
-      <section class="mb-20 relative">
-        <div class="blob-animation blob-3"></div>
-        <h2 class="text-3xl font-semibold mb-10 text-center">أحدث المقالات</h2>
-        <div class="space-y-4">
+      <section class="mb-20 relative" aria-labelledby="recent-posts-heading">
+        <h2 id="recent-posts-heading" class="text-3xl font-semibold mb-10 text-center">أحدث المقالات</h2>
+        <ul class="space-y-4">
           {recentPosts.map(({ data: { title, date }, slug }) => (
-            <article class="bg-white dark:bg-neutral-800 rounded-lg shadow p-6 transition-all duration-300 hover:transform hover:-translate-y-1">
-              <h3 class="text-xl font-semibold mb-3">
-                <a
-                  href={`/blog/${slug}`}
-                  data-astro-prefetch
-                  class="text-neutral-900 dark:text-neutral-100 hover:text-blue-600 dark:hover:text-blue-500 transition-colors duration-200"
-                >
-                  {title}
-                </a>
-              </h3>
-              <p class="text-base text-neutral-600 dark:text-neutral-400 flex items-center gap-2">
-                <Icon name="mdi:calendar" class="w-5 h-5" />
-                {new Date(date).toLocaleDateString('ar', { year: 'numeric', month: 'long', day: 'numeric' })}
-              </p>
-            </article>
+            <li>
+              <article class="bg-white dark:bg-neutral-800 rounded-lg shadow p-6 transition-all duration-300 hover:transform hover:-translate-y-1">
+                <h3 class="text-xl font-semibold mb-3">
+                  <a
+                    href={`/blog/${slug}`}
+                    data-astro-prefetch
+                    class="text-neutral-900 dark:text-neutral-100 hover:text-blue-600 dark:hover:text-blue-500 transition-colors duration-200"
+                  >
+                    {title}
+                  </a>
+                </h3>
+                <p class="text-base text-neutral-600 dark:text-neutral-400 flex items-center gap-2">
+                  <Icon name="mdi:calendar" class="w-5 h-5" aria-hidden="true" />
+                  <time datetime={date.toISOString()}>
+                    {new Date(date).toLocaleDateString('ar', { year: 'numeric', month: 'long', day: 'numeric' })}
+                  </time>
+                </p>
+              </article>
+            </li>
           ))}
-        </div>
+        </ul>
         <div class="text-center mt-12">
           <a href="/blog" class="inline-block bg-blue-500 text-white font-bold text-lg py-3 px-6 rounded-xl shadow hover:bg-blue-600 transition-all duration-300 transform hover:-translate-y-1 hover:shadow-xl">
             جميع المقالات
@@ -61,8 +61,8 @@ const recentPosts = allPosts
         </div>
       </section>
 
-      <section class="text-center relative">
-        <h2 class="text-2xl font-semibold mb-8">دعنا نتواصل</h2>
+      <section class="text-center relative" aria-labelledby="contact-heading">
+        <h2 id="contact-heading" class="text-2xl font-semibold mb-8">دعنا نتواصل</h2>
         <p class="text-xl mb-10">
           هل ترغب في العمل معي أو لديك أي سؤال؟ لا تتردد في التواصل معي عبر البريد الإلكتروني.
         </p>
