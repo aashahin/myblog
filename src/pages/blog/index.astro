@@ -54,7 +54,7 @@ const postsByYear = groupPostsByYear(
           <h2 class="text-2xl font-semibold text-neutral-800 dark:text-neutral-200 mb-6">
             {year}
           </h2>
-          <div class="space-y-8">
+          <div class="space-y-4">
             {yearPosts.map(({ data: { title, tags, date }, slug }: any) => (
               <article class="bg-white dark:bg-neutral-800 rounded-lg shadow p-6 transition-all duration-300 hover:shadow-lg hover:transform hover:-translate-y-1">
                 <div class="flex flex-wrap gap-2 mb-3">

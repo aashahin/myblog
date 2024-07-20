@@ -1,16 +1,14 @@
 ---
-import Nav from "../components/Nav.astro";
+import { ViewTransitions } from 'astro:transitions';
 import { SEO } from "astro-seo";
-
+import Nav from "../components/Nav.astro";
 interface Props {
   title: string;
   keywords: string;
   description: string;
 }
-
 const { title, keywords, description } = Astro.props;
 ---
-
 <!doctype html>
 <html lang="ar" dir="rtl">
   <head>
@@ -46,12 +44,34 @@ const { title, keywords, description } = Astro.props;
       href="https://fonts.googleapis.com/css2?family=Almarai:wght@300;400;700;800&display=swap"
       rel="stylesheet"
     />
+    <ViewTransitions />
     <script is:inline>
-      if (localStorage.theme === 'dark' || (!('theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
-        document.documentElement.classList.add('dark')
-      } else {
-        document.documentElement.classList.remove('dark')
+      function applyTheme() {
+        const theme = (() => {
+          if (typeof localStorage !== 'undefined' && localStorage.getItem('theme')) {
+            return localStorage.getItem('theme');
+          }
+          if (window.matchMedia('(prefers-color-scheme: dark)').matches) {
+            return 'dark';
+          }
+          return 'light';
+        })();
+
+        if (theme === 'light') {
+          document.documentElement.classList.remove('dark');
+        } else {
+          document.documentElement.classList.add('dark');
+        }
+
+        window.localStorage.setItem('theme', theme);
       }
+
+      // Apply theme on initial load
+      applyTheme();
+
+      // Apply theme after view transitions
+      document.addEventListener('astro:after-swap', applyTheme);
+      window.addEventListener('theme-change', applyTheme);
     </script>
   </head>
   <body class="bg-white dark:bg-neutral-900 transition-colors duration-300">
@@ -61,23 +81,19 @@ const { title, keywords, description } = Astro.props;
     </main>
   </body>
 </html>
-
 <style is:global>
   @tailwind base;
   @tailwind components;
   @tailwind utilities;
-
   html {
     font-family: 'Almarai', sans-serif;
     font-size: 18px;
     scroll-behavior: smooth;
   }
-
   body {
     @apply antialiased;
     overflow-x: hidden;
   }
-
   @media (prefers-reduced-motion: reduce) {
     html {
       scroll-behavior: auto;
